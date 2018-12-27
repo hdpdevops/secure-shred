@@ -26,7 +26,7 @@ require 'vendor/autoload.php';
 
 $shred = new Shred\Shred($n); // $n (optional) <= Number of iterations. Default 3.
 
-$shred->shred('folder/file.txt'); // <= Overwrite and Remove.
+$shred->shred('folder/file.txt'); // <= Overwrite and remove.
 $shred->shred('folder/file.txt', false); // <= Only overwrite.
 
 // Check if remove
