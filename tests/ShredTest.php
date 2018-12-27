@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
@@ -21,7 +20,7 @@ final class ShredTest extends TestCase
         mkdir(vfsStream::url("{$this->rootName}/{$this->testFolder}"));
     }
 
-    public function testCanShred(): void
+    public function testCanShred()
     {
         $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
         
@@ -51,7 +50,7 @@ final class ShredTest extends TestCase
         );
     }
 
-    public function testCanShredAndDelete(): void
+    public function testCanShredAndDelete()
     {
         $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
         
@@ -72,7 +71,7 @@ final class ShredTest extends TestCase
         );
     }
 
-    public function testStats(): void
+    public function testStats()
     {
         $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
         
@@ -118,7 +117,7 @@ final class ShredTest extends TestCase
         );
     }
 
-    public function testStatsCustom(): void
+    public function testStatsCustom()
     {
         $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
         
@@ -164,7 +163,7 @@ final class ShredTest extends TestCase
         );
     }
 
-    public function testStatsDelete(): void
+    public function testStatsDelete()
     {
         $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
         
