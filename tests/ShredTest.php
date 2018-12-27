@@ -40,7 +40,7 @@ final class ShredTest extends TestCase
         $newContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
         
         $this->assertEquals(
-            11,
+            12,
             strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
         );
         
