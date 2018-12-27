@@ -35,5 +35,10 @@
         "classmap": [
             "src/"
         ]
+    },
+    "support": {
+        "issues": "https://github.com/DanielRuf/secure-shred/issues",
+        "source": "https://github.com/DanielRuf/secure-shred",
+        "docs": "https://github.com/DanielRuf/secure-shred/blob/master/README.md"
     }
 }
