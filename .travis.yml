@@ -15,7 +15,8 @@ cache:
     - $HOME/.composer/cache/files
 
 before_script:
-  - if [ $(phpenv version-name) != "5.6" ]; then composer install; fi
   - if [ $(phpenv version-name) = "5.6" ]; then composer require paragonie/random_compat:2.0.17; fi
+  - if [ $(phpenv version-name) = "5.6" ]; then composer require phpunit/phpunit:4.8.36; fi
+  - composer install
 
 script: composer test
