@@ -11,20 +11,36 @@ namespace Shred;
  */
 final class Shred {
   
-  /* Number of iterations. Default = 3 */
+  /**
+   * Number of iterations. Default = 3
+   *
+   * @var integer
+   */
   private $iterations;
 
-  /* Size of a block. Default = 3 */
+  /**
+   * Size of a block. Default = 3
+   *
+   * @var integer
+   */
   private $block_size;
 
-  /* Show stats. Default = false */
+  /**
+   * Show stats. Default = false
+   *
+   * @var bool
+   */
   private $stats;
   
   /**
-   * Set the iterations and block size.
+   * Set the iterations, block size, and statistics reporting.
+   *
+   * If `$stats` is `true`, shredding operations will print/echo their
+   * progress and successes or failures.
    *
    * @param integer $iterations
    * @param integer $block_size
+   * @param bool $stats
    */
   public function __construct($iterations = 3, $block_size = 3, $stats = false) {
     $this->iterations = +$iterations;
@@ -33,7 +49,7 @@ final class Shred {
   }
   
   /**
-   * Overwrite file and/or Safely Remove
+   * Overwrite and/or safely remove (i.e., `unlink()`) the file.
    *
    * @param string $filepath
    * @param bool $remove
@@ -106,10 +122,10 @@ final class Shred {
   }
   
   /**
-   * Overwrites file n iterations times.
+   * Overwrites a file N iterations times.
    *
-   * @param class $read
-   * @param class $write
+   * @param \SplFileObject $read File opened in a readable mode.
+   * @param \SplFileObject $write Same file opened in a writable mode.
    */
   private function overwriteFile($read, $write) {
     $iterations = $this->iterations;
@@ -133,10 +149,10 @@ final class Shred {
   }
   
   /**
-   * Get Random string 'n' length.
+   * Get a random string of a given length.
    *
    * @param integer $line_length
-   * @param integer $block_size
+   * @uses Shred::$block_size
    * @return string
    */
   private function stringRand($line_length) {
