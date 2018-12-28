@@ -2,8 +2,8 @@
 
 Safely deletes files
 
-## Requeriments
-PHP 7.1
+## Requirements
+PHP >= 7.1 (PHP >= 5.4 is supported but requires `paragonie/random_compat`)
 
 ## Installation
 
@@ -17,7 +17,7 @@ composer.json
 }
 ```
 
-Run `composer install`
+Run `composer install` or `composer require danielruf/secure-shred`
 
 ## Usage
 ```php
