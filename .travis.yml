@@ -26,4 +26,4 @@ jobs:
       before_script:
         - composer global require friendsofphp/php-cs-fixer
       script:
-        - php-cs-fixer fix --dry-run -v --show-progress=dots --diff-format=udiff src tests
+        - php-cs-fixer fix --config=.php_cs.dist --dry-run -v --show-progress=dots --diff-format=udiff src tests
