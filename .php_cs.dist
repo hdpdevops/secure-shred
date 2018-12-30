@@ -5,9 +5,11 @@ $finder = PhpCsFixer\Finder::create()
 ;
 
 return PhpCsFixer\Config::create()
+    ->setUsingCache(false)
     ->setRules([
         '@PSR1' => true,
-        '@PSR2' => true
+        '@PSR2' => true,
+        'indentation_type' => false
     ])
     ->setIndent("  ")
     ->setFinder($finder)
