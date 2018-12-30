@@ -6,198 +6,200 @@ use org\bovigo\vfs\vfsStreamWrapper;
 
 final class ShredTest extends TestCase
 {
+  private $root;
+  private $rootName = 'home';
+  private $testFile = 'test';
+  private $testFolder = 'testFolder';
 
-    private $root;
-    private $rootName = 'home';
-    private $testFile = 'test';
-    private $testFolder = 'testFolder';
+  public function setUp()
+  {
+    vfsStreamWrapper::register();
+    $this->root = vfsStream::setup($this->rootName);
+    file_put_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"), '1 2 3 4 5 6');
+    mkdir(vfsStream::url("{$this->rootName}/{$this->testFolder}"));
+  }
 
-    public function setUp()
-    {
-        vfsStreamWrapper::register();
-        $this->root = vfsStream::setup($this->rootName);
-        file_put_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"), '1 2 3 4 5 6');
-        mkdir(vfsStream::url("{$this->rootName}/{$this->testFolder}"));
-    }
+  public function testCanShred()
+  {
+    $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
 
-    public function testCanShred()
-    {
-        $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $this->assertEquals(
+      11,
+      strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
+    );
 
-        $this->assertEquals(
-            11,
-            strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
-        );
+    $oldContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $shred = new Shred\Shred();
 
-        $oldContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
-        $shred = new Shred\Shred();
+    $this->assertEquals(
+      true,
+      $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), false)
+    );
 
-        $this->assertEquals(
-            true,
-            $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), false)
-        );
+    $newContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
 
-        $newContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $this->assertEquals(
+      11,
+      strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
+    );
 
-        $this->assertEquals(
-            11,
-            strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
-        );
+    $this->assertNotEquals(
+      $oldContent,
+      $newContent
+    );
+  }
 
-        $this->assertNotEquals(
-            $oldContent,
-            $newContent
-        );
-    }
+  public function testCanShredAndDelete()
+  {
+    $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
 
-    public function testCanShredAndDelete()
-    {
-        $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $this->assertEquals(
+      11,
+      strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
+    );
 
-        $this->assertEquals(
-            11,
-            strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
-        );
+    $shred = new Shred\Shred();
 
-        $shred = new Shred\Shred();
+    $this->assertEquals(
+      true,
+      $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), true)
+    );
 
-        $this->assertEquals(
-            true,
-            $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), true)
-        );
+    $this->assertFileNotExists(
+      vfsStream::url("{$this->rootName}/{$this->testFile}")
+    );
+  }
 
-        $this->assertFileNotExists(
-            vfsStream::url("{$this->rootName}/{$this->testFile}")
-        );
-    }
+  public function testStats()
+  {
+    $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
 
-    public function testStats()
-    {
-        $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $this->assertEquals(
+      11,
+      strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
+    );
 
-        $this->assertEquals(
-            11,
-            strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
-        );
+    $oldContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $shred = new Shred\Shred(3, 3, true);
+    $this->setOutputCallback(function () {
+    });
 
-        $oldContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
-        $shred = new Shred\Shred(3, 3, true);
-        $this->setOutputCallback(function() {});
+    $this->assertEquals(
+      true,
+      $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), false)
+    );
 
-        $this->assertEquals(
-            true,
-            $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), false)
-        );
+    $newContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
 
-        $newContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $this->assertEquals(
+      11,
+      strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
+    );
 
-        $this->assertEquals(
-            11,
-            strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
-        );
+    $this->assertNotEquals(
+      $oldContent,
+      $newContent
+    );
 
-        $this->assertNotEquals(
-            $oldContent,
-            $newContent
-        );
+    $this->assertContains(
+      "iterations: 3\n",
+      $this->getActualOutput()
+    );
 
-        $this->assertContains(
-            "iterations: 3\n",
-            $this->getActualOutput()
-        );
+    $this->assertContains(
+      "block size: 3\n",
+      $this->getActualOutput()
+    );
 
-        $this->assertContains(
-            "block size: 3\n",
-            $this->getActualOutput()
-        );
+    $this->assertContains(
+      "took: ",
+      $this->getActualOutput()
+    );
+  }
 
-        $this->assertContains(
-            "took: ",
-            $this->getActualOutput()
-        );
-    }
+  public function testStatsCustom()
+  {
+    $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
 
-    public function testStatsCustom()
-    {
-        $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $this->assertEquals(
+      11,
+      strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
+    );
 
-        $this->assertEquals(
-            11,
-            strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
-        );
+    $oldContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $shred = new Shred\Shred(5, 6, true);
+    $this->setOutputCallback(function () {
+    });
 
-        $oldContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
-        $shred = new Shred\Shred(5, 6, true);
-        $this->setOutputCallback(function() {});
+    $this->assertEquals(
+      true,
+      $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), false)
+    );
 
-        $this->assertEquals(
-            true,
-            $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), false)
-        );
+    $newContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
 
-        $newContent = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $this->assertEquals(
+      11,
+      strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
+    );
 
-        $this->assertEquals(
-            11,
-            strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
-        );
+    $this->assertNotEquals(
+      $oldContent,
+      $newContent
+    );
 
-        $this->assertNotEquals(
-            $oldContent,
-            $newContent
-        );
+    $this->assertContains(
+      "iterations: 5\n",
+      $this->getActualOutput()
+    );
 
-        $this->assertContains(
-            "iterations: 5\n",
-            $this->getActualOutput()
-        );
+    $this->assertContains(
+      "block size: 6\n",
+      $this->getActualOutput()
+    );
 
-        $this->assertContains(
-            "block size: 6\n",
-            $this->getActualOutput()
-        );
+    $this->assertContains(
+      "took: ",
+      $this->getActualOutput()
+    );
+  }
 
-        $this->assertContains(
-            "took: ",
-            $this->getActualOutput()
-        );
-    }
+  public function testStatsDelete()
+  {
+    $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
 
-    public function testStatsDelete()
-    {
-        $file = file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}"));
+    $this->assertEquals(
+      11,
+      strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
+    );
 
-        $this->assertEquals(
-            11,
-            strlen(file_get_contents(vfsStream::url("{$this->rootName}/{$this->testFile}")))
-        );
+    $shred = new Shred\Shred(3, 3, true);
+    $this->setOutputCallback(function () {
+    });
 
-        $shred = new Shred\Shred(3, 3, true);
-        $this->setOutputCallback(function() {});
+    $this->assertEquals(
+      true,
+      $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), true)
+    );
 
-        $this->assertEquals(
-            true,
-            $shred->shred(vfsStream::url("{$this->rootName}/{$this->testFile}"), true)
-        );
+    $this->assertContains(
+      "iterations: 3\n",
+      $this->getActualOutput()
+    );
 
-        $this->assertContains(
-            "iterations: 3\n",
-            $this->getActualOutput()
-        );
+    $this->assertContains(
+      "block size: 3\n",
+      $this->getActualOutput()
+    );
 
-        $this->assertContains(
-            "block size: 3\n",
-            $this->getActualOutput()
-        );
+    $this->assertContains(
+      "took: ",
+      $this->getActualOutput()
+    );
 
-        $this->assertContains(
-            "took: ",
-            $this->getActualOutput()
-        );
-
-        $this->assertContains(
-            "successfully deleted vfs://{$this->rootName}/{$this->testFile}",
-            $this->getActualOutput()
-        );
-    }
+    $this->assertContains(
+      "successfully deleted vfs://{$this->rootName}/{$this->testFile}",
+      $this->getActualOutput()
+    );
+  }
 }

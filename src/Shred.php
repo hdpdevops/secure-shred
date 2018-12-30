@@ -9,7 +9,8 @@ namespace Shred;
  * Free to use and abuse under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  */
-final class Shred {
+final class Shred
+{
 
   /**
    * Number of iterations. Default = 3
@@ -42,7 +43,8 @@ final class Shred {
    * @param integer $block_size
    * @param bool $stats
    */
-  public function __construct($iterations = 3, $block_size = 3, $stats = false) {
+  public function __construct($iterations = 3, $block_size = 3, $stats = false)
+  {
     $this->iterations = +$iterations;
     $this->block_size = +$block_size;
     $this->stats = $stats;
@@ -55,7 +57,8 @@ final class Shred {
    * @param bool $remove
    * @return bool
    */
-  public function shred($filepath, $remove = true) {
+  public function shred($filepath, $remove = true)
+  {
     $unlink = true;
     $iterations = $this->iterations;
     $block_size = $this->block_size;
@@ -66,13 +69,13 @@ final class Shred {
         $read  = new \SplFileObject($filepath, 'r');
         $write = new \SplFileObject($filepath, 'r+');
 
-        if($stats) {
+        if ($stats) {
           $start = microtime(true);
         }
 
         $this->overwriteFile($read, $write);
 
-        if($stats) {
+        if ($stats) {
           $end = microtime(true);
           $time = ($end-$start) * 1000;
 
@@ -91,7 +94,7 @@ final class Shred {
 
           $unlink = unlink($filepath);
 
-          if($stats && $unlink){
+          if ($stats && $unlink) {
             echo "successfully deleted {$filepath}\n";
           }
         }
@@ -100,9 +103,7 @@ final class Shred {
       }
 
       return false;
-
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       throw new \Exception($e->getCode() . ' :: ' . $e->getMessage() . ' ::');
     }
   }
@@ -113,7 +114,8 @@ final class Shred {
    * @param string $filepath
    * @return bool
    */
-  private function fileWritable($filepath) {
+  private function fileWritable($filepath)
+  {
     if (is_readable($filepath) && is_writable($filepath)) {
       return true;
     }
@@ -127,7 +129,8 @@ final class Shred {
    * @param \SplFileObject $read File opened in a readable mode.
    * @param \SplFileObject $write Same file opened in a writable mode.
    */
-  private function overwriteFile($read, $write) {
+  private function overwriteFile($read, $write)
+  {
     $iterations = $this->iterations;
 
     while (!$read->eof()) {
@@ -155,7 +158,8 @@ final class Shred {
    * @uses Shred::$block_size
    * @return string
    */
-  private function stringRand($line_length) {
+  private function stringRand($line_length)
+  {
     $block_size = $this->block_size;
     $blocks = +($line_length / $block_size);
 

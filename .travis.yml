@@ -18,3 +18,12 @@ before_script:
   - if [ $(phpenv version-name) = "5.4" ] || [ $(phpenv version-name) = "5.5" ] || [ $(phpenv version-name) = "5.6" ]; then composer require --dev paragonie/random_compat:2.0.17; fi
 
 script: composer test
+
+jobs:
+  include:
+    - stage: Static Code Analysis
+      php: 7.3
+      before_script:
+        - composer global require friendsofphp/php-cs-fixer
+      script:
+        - php-cs-fixer fix --dry-run -v --show-progress=dots --diff-format=udiff src tests
