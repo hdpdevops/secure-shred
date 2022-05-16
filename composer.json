@@ -1,5 +1,5 @@
 {
-    "name": "danielruf/secure-shred",
+    "name": "hdpdevops/secure-shred",
     "description": "Safely deletes files",
     "version": "1.0.0",
     "keywords": [
@@ -8,16 +8,12 @@
         "remove",
         "secure"
     ],
-    "homepage": "https://github.com/DanielRuf/secure-shred",
+    "homepage": "https://github.com/hdpdevops/secure-shred",
     "license": "MIT",
     "authors": [
         {
-            "name": "Daniel Ruf",
-            "email": "kontakt@daniel-ruf.de"
-        },
-        {
-            "name": "Dani C.",
-            "email": "dani.co@mail.com"
+            "name": "DevOps",
+            "email": "devops@harvestdp.com"
         }
     ],
     "minimum-stability": "stable",
@@ -37,8 +33,8 @@
         ]
     },
     "support": {
-        "issues": "https://github.com/DanielRuf/secure-shred/issues",
-        "source": "https://github.com/DanielRuf/secure-shred",
-        "docs": "https://github.com/DanielRuf/secure-shred/blob/master/README.md"
+        "issues": "https://github.com/hdpdevops/secure-shred/issues",
+        "source": "https://github.com/hdpdevops/secure-shred",
+        "docs": "https://github.com/hdpdevops/secure-shred/blob/master/README.md"
     }
 }
