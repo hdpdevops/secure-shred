@@ -12,12 +12,17 @@ composer.json
 ```javascript
 {
 	"require": {
-		"danielruf/secure-shred": "^1"
-	}
+		"hdpdevops/secure-shred": "^1"
+	},
+	"repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/hdpdevops/secure-shred.git"
+        }
 }
 ```
 
-Run `composer install` or `composer require danielruf/secure-shred`
+Run `composer install` or `composer require hdpdevops/secure-shred`
 
 ## Usage
 ```php
